@@ -1,0 +1,36 @@
+# ======================
+# IntelliJ IDEA
+# ======================
+.idea/
+*.iml
+*.iws
+out/
+*.ipr
+
+# ======================
+# Java build files
+# ======================
+*.class
+*.jar
+*.war
+*.ear
+target/
+bin/
+
+# ======================
+# System files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Temporary files
+# ======================
+*~
+*.tmp
+*.log
+
+# ======================
+# Office temporary backup files (NOT real .docx)
+# ======================
+~$*.docx
