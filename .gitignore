@@ -1,36 +1,34 @@
-# ======================
 # IntelliJ IDEA
-# ======================
 .idea/
 *.iml
-*.iws
 out/
-*.ipr
 
-# ======================
 # Java build files
-# ======================
 *.class
-*.jar
-*.war
-*.ear
-target/
-bin/
 
-# ======================
 # System files
-# ======================
 .DS_Store
 Thumbs.db
 
-# ======================
 # Temporary files
-# ======================
-*~
 *.tmp
 *.log
+*~
+~$*
 
-# ======================
-# Office temporary backup files (NOT real .docx)
-# ======================
-~$*.docx
+# Optional: archives and documents
+*.zip
+*.rar
+*.7z
+*.docx
+*.xlsx
+*.pptx
+
+# IntelliJ
+.idea/
+out/
+
+# Не трекати zip і Word
+*.zip
+*.docx
+
