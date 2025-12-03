@@ -7,12 +7,10 @@ public class InputUtils {
         return value > 0;
     }
 
-
     public static int checkInt(Scanner scanner, String message) {
         int value;
         while (true) {
             System.out.print(message);
-
             if (scanner.hasNextInt()){
                 value = scanner.nextInt();
                 return value;
