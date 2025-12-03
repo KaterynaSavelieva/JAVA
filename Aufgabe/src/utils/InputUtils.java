@@ -3,6 +3,11 @@ import java.util.Scanner;
 
 public class InputUtils {
 
+    public static boolean isPositive (double value) {
+        return value > 0;
+    }
+
+
     public static int checkInt(Scanner scanner, String message) {
         int value;
         while (true) {
@@ -10,14 +15,21 @@ public class InputUtils {
 
             if (scanner.hasNextInt()){
                 value = scanner.nextInt();
-                if (isPositive(value)) {
-                    return value;
-                }
-                System.out.println("Error: value should be >0");
+                return value;
             }else  {
-                System.out.println("Error: enter a  integer!");
+                System.out.println("Error: enter an integer!");
                 scanner.next();
             }
+        }
+    }
+
+    public static int isPositiveInt(Scanner scanner, String message) {
+        while (true) {
+            int value = checkInt(scanner, message);
+            if (isPositive(value)) {
+                return value;
+            }
+            System.out.println("Error: value should be >0");
         }
     }
 
@@ -36,7 +48,15 @@ public class InputUtils {
         }
     }
 
-    public static boolean isPositive (double value) {
-       return value > 0;
+    public static float isPositiveFloat(Scanner scanner, String message) {
+        while (true) {
+            float value = checkFloat(scanner, message);
+            if (isPositive(value)) {
+                return value;
+            }
+            System.out.println("Error: value should be >0");
+        }
     }
+
 }
+
