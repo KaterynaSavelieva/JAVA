@@ -37,11 +37,14 @@ public class Main {
         float rating_avr =  (float)count/n;
         float rating_avr_prc = rating_avr/evaluation.length*100;
 
-        System.out.printf("Average rating %.2f, %.2f %%\n", rating_avr, rating_avr_prc);
+        System.out.printf("\nAverage rating %.2f, %.2f %%\n", rating_avr, rating_avr_prc);
+        System.out.println("-".repeat(39));
         System.out.printf("%-15s %10s %12s\n", "Evaluation", "Quantity","Percentage" );
         System.out.println("-".repeat(39));
         System.out.printf("%-15s %10d %11.2f%%\n", "Not recommended", count1, (float)  count1/ratings.length*100);
         System.out.printf("%-15s %10d %11.2f%%\n", "Acceptable", count2, (float)  count2/ratings.length*100);
         System.out.printf("%-15s %10d %11.2f%%\n", "Excellent", count3, (float)  count3/ratings.length*100);
+        System.out.println("-".repeat(39));
+        System.out.printf("%-15s %10d %11.2f%%\n", "Total", count3+count1+count2, (float)  (count3+count1+count2)/ratings.length*100);
     }
 }
