@@ -1,5 +1,4 @@
 package LE_03_01;
-
 import java.util.Scanner;
 
 public class Main {

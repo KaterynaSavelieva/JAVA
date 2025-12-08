@@ -1,5 +1,4 @@
 package LE_05_01;
-
 import java.util.Scanner;
 
 public  class Main {
@@ -18,7 +17,6 @@ public  class Main {
         return true;
     }
 
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String color_hex;
@@ -33,8 +31,7 @@ public  class Main {
             }
         }
 
-
-        System.out.println("HEX: " +color_hex);
+        System.out.println("HEX: " +color_hex.toUpperCase());
 
         String red = color_hex.substring(1,3);
         String green = color_hex.substring(3,5);

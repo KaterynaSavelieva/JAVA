@@ -7,6 +7,10 @@ public class InputUtils {
         return value > 0;
     }
 
+    public static boolean isInterval (double value, double min, double max ) {
+        return value >= min && value <= max;
+    }
+
     public static int checkInt(Scanner scanner, String message) {
         int value;
         while (true) {
@@ -28,6 +32,16 @@ public class InputUtils {
                 return value;
             }
             System.out.println("Error: value should be >0");
+        }
+    }
+
+    public static int inputIntInterval(Scanner scanner, String message, int min, int max) {
+        while (true) {
+            int value = checkInt(scanner, message);
+            if (isInterval(value, min, max)) {
+                return value;
+            }
+            System.out.println("Error: value should be in the interval between " + min + " and " + max + "!");
         }
     }
 
@@ -57,4 +71,5 @@ public class InputUtils {
     }
 
 }
+
 

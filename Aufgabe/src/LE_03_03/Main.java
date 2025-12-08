@@ -1,6 +1,5 @@
 package LE_03_03;
 import utils.InputUtils;
-
 import java.util.Scanner;
 
 public class Main {
