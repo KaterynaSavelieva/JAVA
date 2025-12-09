@@ -1,4 +1,4 @@
-package LE_05_01;
+package LE_05_01_HEX_RGB;
 import java.util.Scanner;
 
 public  class Main {
