@@ -1,4 +1,4 @@
-package LE_04_04;
+package LE_04_04_HashMap_lot;
 import java.util.HashMap;
 
 public class Main {
