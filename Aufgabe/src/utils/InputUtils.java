@@ -45,17 +45,17 @@ public class InputUtils {
         }
     }
 
+
     public static float checkFloat(Scanner scanner, String message) {
-        float value;
         while (true) {
             System.out.print(message);
+            String input = scanner.nextLine().trim();
+            input = input.replace(",", ".");
 
-            if (scanner.hasNextFloat()){
-                value = scanner.nextFloat();
-                return value;
-            }else  {
-                System.out.println("Error: Please enter a decimal number!");
-                scanner.next();
+            try {
+                return Float.parseFloat(input);
+            }catch (NumberFormatException e){
+                System.out.println("Error: Please enter a valid decimal number!");
             }
         }
     }
