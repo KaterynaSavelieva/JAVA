@@ -1,4 +1,4 @@
-package LE_03_02;
+package LE_03_02_leap_year;
 import java.util.Scanner;
 
 public class Main {

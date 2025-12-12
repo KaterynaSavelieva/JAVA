@@ -1,4 +1,4 @@
-package LE_03_04;
+package LE_03_04_table;
 import utils.InputUtils;
 import java.util.Scanner;
 
