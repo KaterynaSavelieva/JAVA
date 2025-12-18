@@ -1,4 +1,4 @@
-package LE_04_01;
+package LE_04_01_text_symbols;
 
 import java.util.Scanner;
 

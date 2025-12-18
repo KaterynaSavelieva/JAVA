@@ -12,15 +12,13 @@ public class InputUtils {
     }
 
     public static int checkInt(Scanner scanner, String message) {
-        int value;
         while (true) {
             System.out.print(message);
-            if (scanner.hasNextInt()){
-                value = scanner.nextInt();
-                return value;
-            }else  {
+            String input = scanner.next().trim();
+            try {
+                return Integer.parseInt(input);
+            }catch (NumberFormatException e) {
                 System.out.println("Error: enter an integer!");
-                scanner.next();
             }
         }
     }
@@ -49,13 +47,14 @@ public class InputUtils {
     public static float checkFloat(Scanner scanner, String message) {
         while (true) {
             System.out.print(message);
-            String input = scanner.nextLine().trim();
+            String input = scanner.next().trim();
             input = input.replace(",", ".");
 
             try {
                 return Float.parseFloat(input);
             }catch (NumberFormatException e){
                 System.out.println("Error: Please enter a valid decimal number!");
+
             }
         }
     }

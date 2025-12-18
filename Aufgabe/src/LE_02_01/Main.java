@@ -14,5 +14,9 @@ public class Main {
         String nachname = scanner.nextLine();
 
         System.out.println("Ausgabe: Hallo " + vorname + " " + nachname + "!");
+        String fff = scanner.nextLine();
+
+        //scanner.close();
     }
+
 }

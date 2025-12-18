@@ -137,8 +137,17 @@ public class Main {
             System.out.println("3: Exit");
             System.out.print("Enter your choice (1-3): ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            String inputChoice = scanner.nextLine();
+
+            int choice;
+            try { choice = Integer.parseInt(inputChoice);
+
+            } catch (NumberFormatException e){
+                System.out.println("Wrong choice! Please enter 1, 2 or 3.");
+                continue;
+            }
+
+
 
             if (choice == 3) {
                 System.out.println("Bye!");
@@ -151,9 +160,9 @@ public class Main {
             }
             switch (choice) {
                 case 1: timeCalc(scanner);
-                break;
+                    break;
                 case 2: dateCalc(scanner);
-                break;
+                    break;
             }
         }
     }

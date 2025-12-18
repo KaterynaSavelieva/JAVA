@@ -1,4 +1,4 @@
-package LE_05_02;
+package LE_05_02_IP;
 import java.util.Scanner;
 
 public class Main {
@@ -47,16 +47,18 @@ public class Main {
             }
 
             String decimal = String.format("%d.%d.%d.%d", first, second, third, fourth);
-            String hex = String.format("%02X%02X%02X%02X", first, second, third, fourth);
-            String octal = String.format("%03o%03o%03o%03o", first, second, third, fourth);
+            String hex = String.format("%02X.%02X.%02X.%02X", first, second, third, fourth);
+            String octal = String.format("%03o.%03o.%03o.%03o", first, second, third, fourth);
             String binary = Integer.toBinaryString(first) + Integer.toBinaryString(second) + Integer.toBinaryString(third) + Integer.toBinaryString(fourth);
             String binary1 = to8BitBinary(first) + to8BitBinary(second) + to8BitBinary(third) + to8BitBinary(fourth);
+            String binary2 = String.join (".",to8BitBinary(first), to8BitBinary(second), to8BitBinary(third), to8BitBinary(fourth));
 
             System.out.printf("Decimal: %s\n", decimal);
             System.out.printf("Hex: %s\n", hex);
             System.out.printf("Octal: %s\n", octal);
             System.out.printf("Binary: %s\n", binary);
             System.out.printf("Binary: %s\n", binary1);
+            System.out.printf("Binary: %s\n", binary2);
         }
     }
 

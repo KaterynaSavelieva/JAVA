@@ -1,4 +1,4 @@
-package LE_04_02;
+package LE_04_02_cipher_Caesar;
 import java.util.Scanner;
 
 public class Main {

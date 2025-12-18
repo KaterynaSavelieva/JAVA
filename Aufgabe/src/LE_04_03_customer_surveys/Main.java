@@ -1,4 +1,4 @@
-package LE_04_03;
+package LE_04_03_customer_surveys;
 import utils.InputUtils;
 import  java.util.Random;
 import java.util.Scanner;
