@@ -1,15 +1,11 @@
 package LE_09_03;
-
 import java.util.Scanner;
-import utils.InputUtils;
 
 public class App {
 
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
         AccountManagement manager = new AccountManagement();
-
 
         while (true){
             printMenu ();
@@ -17,14 +13,14 @@ public class App {
 
             try {
                 switch (choice){
-                    case 1: System.out.println("1) Create"); break;
+                    case 1: handleCreateAccount(scanner, manager); break;
 
-                    case 2: System.out.println("2) Delete"); break;
-                    case 3: System.out.println("3) Deposit");break;
-                    case 4: System.out.println("4) Withdraw");break;
-                    case 5: System.out.println("5) balance");break;
-                    case 6: System.out.println("6) one account");break;
-                    case 7: System.out.println("7) all accounts");break;
+                    case 2: handleDeleteAccount (scanner, manager); break;
+                    case 3: handleDeposit(scanner, manager);break;
+                    case 4: handleWithdraw(scanner, manager);break;
+                    case 5: handleGetBalance(scanner, manager);break;
+                    case 6: handleShowAccount (scanner,manager);break;
+                    case 7: handleShowAllAccounts (scanner,manager);break;
                     case 0: {
                         System.out.println("Bye! ");
                         return;
@@ -36,8 +32,76 @@ public class App {
             }
             System.out.println();
         }
-
     }
+
+    private static void handleCreateAccount(Scanner scanner, AccountManagement manager){
+        String number = readString(scanner, "Account number: ");
+        String owner = readString(scanner, "Owner name: ");
+        double startBalance = readDouble(scanner, "Start balance: ");
+
+        manager.createAccount(number, owner, startBalance);
+        System.out.println("Account created successfully.");
+    }
+
+    private static void handleDeleteAccount(Scanner scanner, AccountManagement manager){
+        String number = readString(scanner, "Account number: ");
+        boolean deleted = manager.deleteAccount(number);
+        if (deleted){
+            System.out.println("Account deleted successfully.");
+        }else {
+            System.out.println("Account not found.");
+        }
+    }
+
+    private static void handleDeposit  (Scanner scanner, AccountManagement manager){
+        String number = readString(scanner, "Account number: ");
+        double amount = readDouble(scanner, "Deposit amount ");
+        boolean deposited = manager.deposit(number, amount);
+        if (deposited){
+            System.out.println("Deposited successfully.");
+        }
+        else {
+            System.out.println("Account not found.");
+        }
+    }
+
+    private static void handleWithdraw(Scanner scanner, AccountManagement manager){
+        String number = readString(scanner, "Account number: ");
+        double amount = readDouble(scanner, "Withdraw amount ");
+        boolean withdrawn = manager.withdraw(number, amount);
+        if (withdrawn){
+            System.out.println("Withdraw successfully.");
+        }else  {
+            Double balance = manager.getBalance(number);
+            if(balance==null){
+                System.out.println("Account not found.");
+            }else {
+                System.out.println("Not enough balance.");
+            }
+        }
+    }
+
+    private static void handleGetBalance(Scanner scanner, AccountManagement manager){
+        String number = readString(scanner, "Account number: ");
+        Double balance = manager.getBalance(number);
+        if (balance==null){
+            System.out.println("Account not found.");
+        }else  {
+            System.out.println("Account balance: "+balance);
+        }
+    }
+
+    private static void handleShowAccount(Scanner scanner, AccountManagement manager){
+        String number = readString(scanner, "Account number: ");
+        String result = manager.showAccount(number);
+        System.out.println(result);
+    }
+
+    private static void handleShowAllAccounts(Scanner scanner, AccountManagement manager){
+        String accounts = manager.showAllAccounts();
+        System.out.println(accounts);
+    }
+
 
     private static void printMenu() {
         System.out.println("=== Account Management ===");
@@ -50,7 +114,7 @@ public class App {
         System.out.println("7) Show all accounts");
         System.out.println("0) Exit");
     }
-    
+
     //  Input helpers
     private static int readInt (Scanner scanner, String message) {
         while (true) {

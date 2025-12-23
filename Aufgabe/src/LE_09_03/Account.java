@@ -20,7 +20,6 @@ public class Account {
         this.balance = startBalance;
     }
 
-
     // ===== Business methods =====
     public void deposit(double amount) {
         if (amount < 0) {
@@ -47,20 +46,17 @@ public class Account {
 
 
     // ===== Getters =====
-    public double getBalance() {
-        return balance;
-    }
+    public double getBalance() {return balance;}
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
+    public String getAccountNumber() {return accountNumber;}
 
-    public String getOwner() {
-        return owner;
-    }
+    public String getOwner() {return owner;}
 
     @Override
     public String toString() {
         return "Account number: " + accountNumber + ", owner: " + owner + ", balance: " + balance;
     }
+
+
+
 }

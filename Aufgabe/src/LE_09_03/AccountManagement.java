@@ -93,9 +93,17 @@ public class AccountManagement {
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Account numbers: ");
+        sb.append(String.format(
+                "| %-15s | %-20s| %12s|%n",
+                "Account Number", "Owner", "Balance"));
+        sb.append("-".repeat(55)).append("\n");
         for (Account account : accounts) {
-            sb.append(account).append("\n");
+            sb.append(String.format(
+                    "| %-15s | %-20s| %12.2f|%n",
+                    account.getAccountNumber(),
+                    account.getOwner(),
+                    account.getBalance()));
+
         }
         return sb.toString();
     }
