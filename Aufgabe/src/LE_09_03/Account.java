@@ -13,7 +13,7 @@ public class Account {
             throw new IllegalArgumentException("Owner must not be empty.");
         }
         if (startBalance < 0) {
-            throw new IllegalArgumentException("\"Start balance cannot be negative.");
+            throw new IllegalArgumentException("Start balance cannot be negative.");
         }
         this.accountNumber = accountNumber;
         this.owner = owner;
@@ -22,7 +22,7 @@ public class Account {
 
     // ===== Business methods =====
     public void deposit(double amount) {
-        if (amount < 0) {
+        if (amount <= 0) {
             throw new IllegalArgumentException("Deposit amount must be greater than 0.");
         }
         balance += amount;
