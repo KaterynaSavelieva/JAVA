@@ -1,0 +1,53 @@
+@startuml
+skinparam classAttributeIconSize 0
+title Music Management (LE_09-04)
+
+class Artist {
+  -artistId: int
+  -name: String
+}
+
+enum Genre {
+  ROCK
+  POP
+  JAZZ
+  HIPHOP
+  OTHER
+}
+
+class Album {
+  -albumId: int
+  -title: String
+  -genre: Genre
+  -artist: Artist
+  -tracks: List<Track>
+  +getTotalDurationSec(): int
+  +addTrack(track: Track): void
+  +removeTrack(trackId: int): boolean
+}
+
+class Track {
+  -trackId: int
+  -title: String
+  -mp3FileName: String
+  -lengthSec: int
+}
+
+Artist "1" <-- "0..*" Album : performer
+Album "1" *-- "0..*" Track : contains
+
+note right of Album
+Total duration is calculated
+as sum of all Track.lengthSec
+end note
+
+note bottom of Album
+Deleting an Album deletes
+all associated Tracks
+end note
+
+note bottom of Track
+Deleting a Track deletes
+only this Track
+end note
+@enduml
