@@ -12,13 +12,16 @@ public class Main {
         album.addTrack(new Track(2, "Another One Bites The Dust", "another_one.mp3", 215));
         album.addTrack(new Track(3, "We Will Rock You", "we_will_rock_you.mp3", 122));
 
-        System.out.println("=== Album details ===");
-        System.out.println(album);
-
+        album.printDetails();
         System.out.println("\nRemoving track with ID 2...");
-        album.removeTrack(2);
 
-        System.out.println("\n=== Album details after removal ===");
-        System.out.println(album);
+        boolean removed = album.removeTrack(2);
+        if (removed) {
+            System.out.println("Track was removed successfully.");
+        } else {
+            System.out.println("Track not found.");
+        }
+
+        album.printDetails();
     }
 }

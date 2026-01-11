@@ -90,4 +90,44 @@ public class Album {
                 '}';
     }
 
+
+    public void printDetails() {
+
+        System.out.println("\n------------------ALBUM DETAILS------------------");
+
+        System.out.printf("Album:  %s\n", title);
+        System.out.printf("Artist: %s\n", artist.getName());
+        System.out.printf("Genre:  %s\n", genre);
+
+        printSeparator();
+
+        if (tracks.isEmpty()) {
+            System.out.println("Tracks: (no tracks in this album)");
+        } else {
+            System.out.println("Tracks:");
+            for (int i = 0; i < tracks.size(); i++) {
+                Track t = tracks.get(i);
+                // similar to your style: numbered list + aligned columns
+                System.out.printf(" %2d) %-25s | %4d sec | %-20s\n",
+                        (i + 1),
+                        t.getTitle(),
+                        t.getLengthSec(),
+                        t.getMP3FileNama());
+            }
+        }
+
+        printSeparator();
+        printData("Number of tracks:", tracks.size(), "");
+        printData("Total duration:", getTotalDurationSec(), "sec");
+        printSeparator();
+    }
+
+    private void printData(String message, int value, String unit) {
+        System.out.printf("| %-29s | %7d %3s|\n", message, value, unit);
+    }
+
+    private void printSeparator() {
+        System.out.println("-".repeat(55));
+    }
+
 }
