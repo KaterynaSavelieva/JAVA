@@ -1,0 +1,34 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Java build files
+*.class
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+*~
+~$*
+
+# Optional: archives and documents
+*.zip
+*.rar
+*.7z
+*.docx
+*.xlsx
+*.pptx
+
+# IntelliJ
+.idea/
+out/
+
+# Не трекати zip і Word
+*.zip
+*.docx
+
