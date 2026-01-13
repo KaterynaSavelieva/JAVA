@@ -1,4 +1,7 @@
-package LE_10_01.model;
+package LE_10_01.model.assignment;
+
+import LE_10_01.model.person.Employee;
+import LE_10_01.model.vehicle.Vehicle;
 
 import java.time.LocalDate;
 import java.util.Objects;

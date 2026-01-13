@@ -1,20 +1,20 @@
-package LE_10_01.model;
+package LE_10_01.model.vehicle;
 
 public abstract class Vehicle {
 
     private int vehicleId;
-    private VehicleType vehicleType;
+    private VehicleType vehicleType; //Enum: CAR, TRUCK, MOTORCYCLE
 
     private String licensePlate;
     private String brand;
     private int productionYear;
 
-    private EnergyType energyType;
-    private EnergyUnit energyUnit;
+    private EnergyType energyType; //Enum: PETROL, DIESEL, ELECTRIC, HYBRID
+    private EnergyUnit energyUnit; //Enum: LITER, KWH
 
     private double energyConsumption; // per 100 km
-    private int mileage;
-    private double energyLevel;
+    private int mileage;            //пробіг
+    private double energyLevel;     //поточний рівень енергії
 
     protected Vehicle(int vehicleId,
                       VehicleType vehicleType,
@@ -39,7 +39,7 @@ public abstract class Vehicle {
         this.energyLevel = Math.max(energyLevel, 0);
     }
 
-    public void drive(int km) {
+    public void drive(int km) { //збільшує пробіг автомобіля
         if (km > 0) mileage += km;
     }
 

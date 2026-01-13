@@ -1,4 +1,4 @@
-package LE_10_01.model;
+package LE_10_01.model.person;
 
 import java.time.LocalDate;
 import java.util.Objects;

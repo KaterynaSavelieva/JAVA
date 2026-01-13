@@ -1,7 +1,7 @@
-package LE_10_01.model;
+package LE_10_01.model.vehicle;
 
 
-public class Car extends Vehicle{
+public class Car extends Vehicle {
     private final int numberOfSeats;    // DB: car.number_of_seats
 
     public Car (int vehicleId,

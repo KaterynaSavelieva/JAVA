@@ -1,6 +1,6 @@
-package LE_10_01.model;
+package LE_10_01.model.vehicle;
 
-public class Truck extends Vehicle{
+public class Truck extends Vehicle {
 
     private final double  maxLoadKg;
 

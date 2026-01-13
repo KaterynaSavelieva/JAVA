@@ -1,6 +1,11 @@
 package LE_10_01.app;
 
-import LE_10_01.model.*;
+import LE_10_01.model.assignment.VehicleDriverAssignment;
+import LE_10_01.model.license.LicenseCode;
+import LE_10_01.model.person.Employee;
+import LE_10_01.model.vehicle.Car;
+import LE_10_01.model.vehicle.EnergyType;
+import LE_10_01.model.vehicle.EnergyUnit;
 
 import java.time.LocalDate;
 

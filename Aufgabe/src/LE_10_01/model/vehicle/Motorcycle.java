@@ -1,6 +1,6 @@
-package LE_10_01.model;
+package LE_10_01.model.vehicle;
 
-public class Motorcycle extends Vehicle{
+public class Motorcycle extends Vehicle {
 
     private final int engineCapacityCcm; // DB: motorcycle.engine_capacity_ccm
 

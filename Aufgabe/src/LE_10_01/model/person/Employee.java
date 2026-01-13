@@ -1,4 +1,6 @@
-package LE_10_01.model;
+package LE_10_01.model.person;
+
+import LE_10_01.model.license.LicenseCode;
 
 import java.time.LocalDate;
 import java.util.Collections;
