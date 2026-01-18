@@ -1,4 +1,4 @@
-package LE_09_04;
+package LE_09_04.model;
 
 public enum Genre {
     ROCK,

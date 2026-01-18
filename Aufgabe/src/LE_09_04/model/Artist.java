@@ -1,4 +1,4 @@
-package LE_09_04;
+package LE_09_04.model;
 
 public class Artist {
     private final int artistID;
@@ -7,7 +7,7 @@ public class Artist {
     // значення присвоюється ОДИН раз (у конструкторі), після створення об’єкта не може змінюватися
 
     public Artist(int artistID, String name) {
-        if (artistID < 0) {
+        if (artistID <= 0) {
             throw new IllegalArgumentException("Artist ID must be a positive integer");
         }
         if (name == null|| name.isBlank()) {
@@ -17,13 +17,8 @@ public class Artist {
         this.name = name;
     }
 
-    public int getArtistID() {
-        return artistID;
-    }
-
-    public String getName() {
-        return name;
-    }
+    public int getArtistID() {return artistID;}
+    public String getName() {return name;}
 
     @Override
     public String toString() {
