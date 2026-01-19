@@ -1,6 +1,4 @@
-package LE_10_01.app;
-
-import LE_10_01.db.DBConnection;
+package LE_10_01.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,76 +1,84 @@
-package LE_10_01.db;
+package LE_10_01.db.insert;
 
-import java.sql.*;
+import LE_10_01.db.DbWrite;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class VehicleInsert {
 
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
 
-        // 1) TYPE
-        String vehicleType = readEnum(scanner,
+        System.out.println("\n=== INSERT NEW VEHICLE ===");
+
+        final String vehicleType = readEnum(scanner,
                 "Vehicle type (CAR/TRUCK/MOTORCYCLE): ",
                 new String[]{"CAR", "TRUCK", "MOTORCYCLE"});
 
-        // 2) Common fields for table vehicle
         System.out.print("License plate: ");
-        String plate = scanner.nextLine().trim();
+        final String plate = scanner.nextLine().trim();
 
         System.out.print("Brand: ");
-        String brand = scanner.nextLine().trim();
+        final String brand = scanner.nextLine().trim();
 
-        int year = readPositiveInt(scanner, "Production year (e.g. 2019): ");
+        final int year = readPositiveInt(scanner, "Production year (e.g. 2019): ");
 
-        String energyType = readEnum(scanner,
+        final String energyType = readEnum(scanner,
                 "Energy type (PETROL/DIESEL/ELECTRIC/HYBRID): ",
                 new String[]{"PETROL", "DIESEL", "ELECTRIC", "HYBRID"});
 
-        // Energy unit (simple rule: ELECTRIC => KWH, else => LITER)
-        String energyUnit = energyType.equals("ELECTRIC") ? "KWH" : "LITER";
+        final String energyUnit = energyType.equals("ELECTRIC") ? "KWH" : "LITER";
         System.out.println("Energy unit auto-set to: " + energyUnit);
 
-        double consumption = readNonNegativeDouble(scanner, "Energy consumption per 100km: ");
-        int mileage = readNonNegativeInt(scanner, "Mileage (km): ");
-        double level = readNonNegativeDouble(scanner, "Energy level (" + energyUnit + "): ");
+        final double consumption = readNonNegativeDouble(scanner, "Energy consumption per 100km: ");
+        final int mileage = readNonNegativeInt(scanner, "Mileage (km): ");
+        final double level = readNonNegativeDouble(scanner, "Energy level (" + energyUnit + "): ");
 
-        // 3) Subtype detail
-        Integer seats = null;
-        Double maxLoadKg = null;
-        Integer engineCcm = null;
+        // subtype detail
+        final Integer seats;
+        final Double maxLoadKg;
+        final Integer engineCcm;
 
         switch (vehicleType) {
-            case "CAR" -> seats = readPositiveInt(scanner, "Number of seats: ");
-            case "TRUCK" -> maxLoadKg = readNonNegativeDouble(scanner, "Max load (kg): ");
-            case "MOTORCYCLE" -> engineCcm = readPositiveInt(scanner, "Engine capacity (ccm): ");
+            case "CAR" -> {
+                seats = readPositiveInt(scanner, "Number of seats: ");
+                maxLoadKg = null;
+                engineCcm = null;
+            }
+            case "TRUCK" -> {
+                seats = null;
+                maxLoadKg = readNonNegativeDouble(scanner, "Max load (kg): ");
+                engineCcm = null;
+            }
+            case "MOTORCYCLE" -> {
+                seats = null;
+                maxLoadKg = null;
+                engineCcm = readPositiveInt(scanner, "Engine capacity (ccm): ");
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + vehicleType);
         }
 
-        // === INSERT WITH TRANSACTION ===
-        try (Connection conn = DBConnection.getConnection()) {
-            conn.setAutoCommit(false);
-
-            try {
-                int vehicleId = insertVehicle(conn, vehicleType, plate, brand, year,
+        try {
+            int vehicleId = DbWrite.inTransaction(conn -> {
+                int vid = insertVehicle(conn, vehicleType, plate, brand, year,
                         energyType, energyUnit, consumption, mileage, level);
 
-                insertSubtype(conn, vehicleType, vehicleId, seats, maxLoadKg, engineCcm);
+                insertSubtype(conn, vehicleType, vid, seats, maxLoadKg, engineCcm);
+                return vid;
+            });
 
-                conn.commit();
-                System.out.println("Insert successful  vehicle_id = " + vehicleId);
-
-            } catch (Exception e) {
-                conn.rollback();
-                System.out.println("Insert failed (rolled back)");
-                e.printStackTrace();
-            }
+            System.out.println("Insert successful ✅ vehicle_id = " + vehicleId);
 
         } catch (Exception e) {
-            System.out.println("DB connection failed ❌");
+            System.out.println("Insert failed ❌");
             e.printStackTrace();
         }
     }
 
-    // ---------- INSERTS ----------
+    // ---------- INSERTS using DbWrite ----------
 
     private static int insertVehicle(Connection conn,
                                      String vehicleType,
@@ -90,27 +98,17 @@ public class VehicleInsert {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
-        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        return DbWrite.insertAndGetId(conn, sql, ps -> {
             ps.setString(1, vehicleType);
             ps.setString(2, plate);
             ps.setString(3, brand);
             ps.setInt(4, year);
-
             ps.setString(5, energyType);
             ps.setString(6, energyUnit);
-
             ps.setDouble(7, consumption);
             ps.setInt(8, mileage);
             ps.setDouble(9, level);
-
-            ps.executeUpdate();
-
-            try (ResultSet keys = ps.getGeneratedKeys()) {
-                if (keys.next()) return keys.getInt(1);
-            }
-        }
-
-        throw new SQLException("No generated key for vehicle");
+        });
     }
 
     private static void insertSubtype(Connection conn,
@@ -121,30 +119,27 @@ public class VehicleInsert {
                                       Integer engineCcm) throws SQLException {
 
         switch (vehicleType) {
-            case "CAR" -> {
-                String sql = "INSERT INTO car (vehicle_id, number_of_seats) VALUES (?, ?)";
-                try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                    ps.setInt(1, vehicleId);
-                    ps.setInt(2, seats);
-                    ps.executeUpdate();
-                }
-            }
-            case "TRUCK" -> {
-                String sql = "INSERT INTO truck (vehicle_id, max_load_kg) VALUES (?, ?)";
-                try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                    ps.setInt(1, vehicleId);
-                    ps.setDouble(2, maxLoadKg);
-                    ps.executeUpdate();
-                }
-            }
-            case "MOTORCYCLE" -> {
-                String sql = "INSERT INTO motorcycle (vehicle_id, engine_capacity_ccm) VALUES (?, ?)";
-                try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                    ps.setInt(1, vehicleId);
-                    ps.setInt(2, engineCcm);
-                    ps.executeUpdate();
-                }
-            }
+            case "CAR" -> DbWrite.executeUpdate(conn,
+                    "INSERT INTO car (vehicle_id, number_of_seats) VALUES (?, ?)",
+                    ps -> {
+                        ps.setInt(1, vehicleId);
+                        ps.setInt(2, seats);
+                    });
+
+            case "TRUCK" -> DbWrite.executeUpdate(conn,
+                    "INSERT INTO truck (vehicle_id, max_load_kg) VALUES (?, ?)",
+                    ps -> {
+                        ps.setInt(1, vehicleId);
+                        ps.setDouble(2, maxLoadKg);
+                    });
+
+            case "MOTORCYCLE" -> DbWrite.executeUpdate(conn,
+                    "INSERT INTO motorcycle (vehicle_id, engine_capacity_ccm) VALUES (?, ?)",
+                    ps -> {
+                        ps.setInt(1, vehicleId);
+                        ps.setInt(2, engineCcm);
+                    });
+
             default -> throw new SQLException("Unknown vehicle type: " + vehicleType);
         }
     }

@@ -1,4 +1,4 @@
-package LE_10_01.db;
+package LE_10_01.app;
 
 import LE_10_01.db.DBConnection;
 import java.sql.Connection;

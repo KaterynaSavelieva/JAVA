@@ -2,52 +2,105 @@
 skinparam classAttributeIconSize 0
 title Music Management (LE_09-04)
 
-class Artist {
-  -artistId: int
-  -name: String
+package "LE_09_04.model" {
+  class Artist {
+    -artistID: int
+    -name: String
+  }
+
+  enum Genre {
+    ROCK
+    POP
+    JAZZ
+    HIPHOP
+    OTHER
+  }
+
+  class Album {
+    -albumID: int
+    -title: String
+    -genre: Genre
+    -artist: Artist
+    -tracks: List<Track>
+    +getTotalDurationSec(): int
+    +addTrack(track: Track): void
+    +removeTrack(trackId: int): boolean
+    +clearTracks(): void
+  }
+
+  class Track {
+    -trackId: int
+    -title: String
+    -mp3FileName: String
+    -lengthSec: int
+  }
 }
 
-enum Genre {
-  ROCK
-  POP
-  JAZZ
-  HIPHOP
-  OTHER
+package "LE_09_04.management" {
+  class MusicManagement {
+    -albums: List<Album>
+    -artists: List<Artist>
+    -nextAlbumId: int
+    -nextArtistId: int
+    -nextTrackId: int
+
+    +generateAlbumId(): int
+    +generateArtistId(): int
+    +generateTrackId(): int
+
+    +findAlbumById(albumId: int): Album
+    +findArtistById(artistId: int): Artist
+
+    +addAlbum(album: Album): void
+    +addArtist(artist: Artist): void
+
+    +removeAlbum(albumId: int): boolean
+    +addTrackToAlbum(albumId: int, track: Track): boolean
+    +removeTrackFromAlbum(albumId: int, trackId: int): boolean
+
+    +hasArtists(): boolean
+
+    +printAllAlbums(): void
+    +printAlbumDetails(albumId: int): void
+    +printAllArtistsShort(): void
+  }
 }
 
-class Album {
-  -albumId: int
-  -title: String
-  -genre: Genre
-  -artist: Artist
-  -tracks: List<Track>
-  +getTotalDurationSec(): int
-  +addTrack(track: Track): void
-  +removeTrack(trackId: int): boolean
+package "LE_09_04.app" {
+  class MenuPrinter {
+    {static} +WIDTH: int
+    {static} +printMenu(): void
+    {static} +printSeparator(): void
+    {static} +printTitle(title: String): void
+  }
+
+  class ConsoleUi {
+    -scanner: Scanner
+    -manager: MusicManagement
+    +start(): void
+  }
 }
 
-class Track {
-  -trackId: int
-  -title: String
-  -mp3FileName: String
-  -lengthSec: int
-}
-
+' ===== Associations (domain) =====
 Artist "1" <-- "0..*" Album : performer
-Album "1" *-- "0..*" Track : contains
+Album  "1" *-- "0..*" Track : contains
 
-note right of Album
-Total duration is calculated
-as sum of all Track.lengthSec
+' ===== Management contains lists =====
+MusicManagement "1" o-- "0..*" Album  : albums
+MusicManagement "1" o-- "0..*" Artist : artists
+
+' ===== Dependencies (printing / ui) =====
+MusicManagement ..> MenuPrinter : uses
+ConsoleUi ..> MusicManagement : uses
+
+note right of Track
+mp3FileName is auto-generated from title:
+lowercase, spaces -> "_", + ".mp3"
 end note
 
-note bottom of Album
-Deleting an Album deletes
-all associated Tracks
+note bottom of MusicManagement
+IDs are generated internally via:
+generateAlbumId(), generateArtistId(), generateTrackId()
 end note
 
-note bottom of Track
-Deleting a Track deletes
-only this Track
-end note
 @enduml

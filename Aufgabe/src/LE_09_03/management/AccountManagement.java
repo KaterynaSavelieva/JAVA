@@ -38,8 +38,6 @@ public class AccountManagement {
         return null;
     }
 
-
-    // Create account
     public boolean createAccount(String branchId, String accountNumber, double startBalance){
         Branch branch = findBranchById(branchId);
         if (branch == null) return false;
@@ -50,7 +48,6 @@ public class AccountManagement {
         return true;
     }
 
-    // Delete account
     public boolean deleteAccount(String accountNumber){
         if (accountNumber == null) return false;
 
@@ -63,8 +60,6 @@ public class AccountManagement {
         return false;
     }
 
-
-    //Deposit
     public boolean deposit(String accountNumber, double amount){
         Account account = findAccountInCompany(accountNumber);
         if (account == null) return false;
@@ -72,23 +67,18 @@ public class AccountManagement {
         return true;
     }
 
-    //Withdraw
     public boolean withdraw(String accountNumber, double amount){
         Account account = findAccountInCompany(accountNumber);
         if (account == null) return false;
         return account.withdraw(amount);
     }
 
-
-    //Get balance
     public Double getBalance(String accountNumber){
         Account account = findAccountInCompany(accountNumber);
         if (account == null) return null;
         return account.getBalance();
     }
 
-
-    // Show one account
     public String showAccount (String accountNumber){
         Account account=findAccountInCompany(accountNumber);
         if(account==null){
@@ -97,8 +87,6 @@ public class AccountManagement {
         return account.toString();
     }
 
-
-    //Show all accounts
     public String showAllAccounts(){
         boolean hasAccounts = false;
 
@@ -145,7 +133,6 @@ public class AccountManagement {
     }
 
 
-    //Show all accounts
     public String showOnlyAccounts(){
         boolean hasAccounts = false;
 

@@ -1,6 +1,6 @@
-package LE_10_01.db;
+package LE_10_01.db.select;
 
-import LE_10_01.app.DbRunner;
+import LE_10_01.db.DbRunner;
 
 public class VehicleWithDetailsSelect {
 
