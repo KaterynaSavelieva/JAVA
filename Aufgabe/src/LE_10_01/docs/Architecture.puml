@@ -1,0 +1,58 @@
+@startuml
+title FleetDB – Layered Architecture
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+' ===== UI =====
+package "UI\n(LE_10_01.app)" {
+  [App]
+  [ConsoleUi]
+  [MenuPrinter]
+  [InputHelper]
+}
+
+' ===== LOGIC =====
+package "Logic\n(LE_10_01.management)" {
+  [FleetManagement]
+}
+
+' ===== DATA ACCESS =====
+package "Data Access\n(LE_10_01.db.dao)" {
+  [EmployeeDao]
+  [VehicleDao]
+  [AssignmentDao]
+}
+
+' ===== DATABASE =====
+package "Database" {
+  [DBConnection]
+  database "MySQL\nfleetdb"
+}
+
+' ===== MODEL =====
+package "Model\n(LE_10_01.model)" {
+  [Person]
+  [Employee]
+  [Vehicle]
+  [Car]
+  [Truck]
+  [Motorcycle]
+  [VehicleDriverAssignment]
+  [License]
+  [Enums]
+}
+
+' ===== MAIN FLOW (ONLY IMPORTANT ARROWS) =====
+[App] --> [ConsoleUi]
+[ConsoleUi] --> [FleetManagement]
+[FleetManagement] --> [EmployeeDao]
+[FleetManagement] --> [VehicleDao]
+[FleetManagement] --> [AssignmentDao]
+[EmployeeDao] --> [DBConnection]
+[VehicleDao] --> [DBConnection]
+[AssignmentDao] --> [DBConnection]
+[DBConnection] --> "MySQL\nfleetdb"
+
+@enduml

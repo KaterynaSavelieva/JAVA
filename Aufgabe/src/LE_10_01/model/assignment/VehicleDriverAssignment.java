@@ -6,6 +6,8 @@ import LE_10_01.model.vehicle.Vehicle;
 import java.time.LocalDate;
 import java.util.Objects;
 
+//This class describes which employee drives which vehicle and during which time period.
+
 public class VehicleDriverAssignment {
 
     private final Vehicle vehicle;
@@ -26,8 +28,11 @@ public class VehicleDriverAssignment {
     public LocalDate getAssignedTo() { return assignedTo; }
 
     public boolean isCurrent() { return assignedTo == null; }
+    // Returns true if this is the current (active) assignment
+    // If assignedTo is null, the driver is still assigned
 
     public void close(LocalDate endDate) { this.assignedTo = endDate; }
+    // Sets the end date of the assignment
 
     @Override
     public String toString() {
