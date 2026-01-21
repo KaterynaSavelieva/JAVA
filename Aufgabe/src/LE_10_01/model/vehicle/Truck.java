@@ -1,8 +1,7 @@
 package LE_10_01.model.vehicle;
 
 public class Truck extends Vehicle {
-
-    private final double  maxLoadKg;
+    private final double maxLoadKg;
 
     public Truck(int vehicleId,
                  String licensePlate,
@@ -10,10 +9,10 @@ public class Truck extends Vehicle {
                  int productionYear,
                  EnergyType energyType,
                  EnergyUnit energyUnit,
-                 double  energyConsumption,
+                 double energyConsumption,
                  int mileage,
-                 double  energyLevel,
-                 double  maxLoadKg) {
+                 double energyLevel,
+                 double maxLoadKg) {
 
         super(vehicleId, VehicleType.TRUCK, licensePlate, brand, productionYear,
                 energyType, energyUnit, energyConsumption, mileage, energyLevel);
@@ -21,7 +20,5 @@ public class Truck extends Vehicle {
         this.maxLoadKg = maxLoadKg;
     }
 
-    public double  getMaxLoadKg() {return maxLoadKg;}
-
-
+    public double getMaxLoadKg() { return maxLoadKg; }
 }

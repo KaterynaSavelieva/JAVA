@@ -1,8 +1,7 @@
 package LE_10_01.model.vehicle;
 
 public class Motorcycle extends Vehicle {
-
-    private final int engineCapacityCcm; // DB: motorcycle.engine_capacity_ccm
+    private final int engineCapacityCcm;
 
     public Motorcycle(int vehicleId,
                       String licensePlate,
@@ -10,9 +9,9 @@ public class Motorcycle extends Vehicle {
                       int productionYear,
                       EnergyType energyType,
                       EnergyUnit energyUnit,
-                      double  energyConsumption,
+                      double energyConsumption,
                       int mileage,
-                      double  energyLevel,
+                      double energyLevel,
                       int engineCapacityCcm) {
 
         super(vehicleId, VehicleType.MOTORCYCLE, licensePlate, brand, productionYear,
@@ -21,8 +20,5 @@ public class Motorcycle extends Vehicle {
         this.engineCapacityCcm = engineCapacityCcm;
     }
 
-    public int getEngineCapacityCcm() {return engineCapacityCcm;}
-
-
-
+    public int getEngineCapacityCcm() { return engineCapacityCcm; }
 }

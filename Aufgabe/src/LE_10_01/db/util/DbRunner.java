@@ -1,4 +1,6 @@
-package LE_10_01.db;
+package LE_10_01.db.util;
+
+import LE_10_01.db.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +14,6 @@ public class DbRunner {
     }
 
     public static void print(String title, String header, String sql, RowMapper mapper) {
-
         System.out.println("\n================ " + title + " ================");
         System.out.println(header);
         System.out.println("-".repeat(header.length()));
@@ -24,11 +25,10 @@ public class DbRunner {
             while (rs.next()) {
                 System.out.println(mapper.map(rs));
             }
-
             System.out.println("-".repeat(header.length()));
 
         } catch (Exception e) {
-            System.out.println(title + " failed");
+            System.out.println(title + " failed ❌");
             e.printStackTrace();
         }
     }

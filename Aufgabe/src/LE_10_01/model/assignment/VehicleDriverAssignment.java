@@ -25,13 +25,9 @@ public class VehicleDriverAssignment {
     public LocalDate getAssignedFrom() { return assignedFrom; }
     public LocalDate getAssignedTo() { return assignedTo; }
 
-    public boolean isCurrent() {
-        return assignedTo == null;
-    }
+    public boolean isCurrent() { return assignedTo == null; }
 
-    public void close(LocalDate endDate) {
-        this.assignedTo = endDate;
-    }
+    public void close(LocalDate endDate) { this.assignedTo = endDate; }
 
     @Override
     public String toString() {

@@ -1,6 +1,7 @@
 @startuml
 skinparam classAttributeIconSize 0
 
+' ===== ENUMS =====
 enum VehicleType {
   CAR
   TRUCK
@@ -27,71 +28,54 @@ enum LicenseCode {
   CE
 }
 
-abstract class Person {
-  - personId : int
-  - name : String
-  - email : String
-  - phone : String
-  - birthdate : LocalDate
+' ===== PERSON / EMPLOYEE =====
+class Person {
+  -personId : int
+  -name : String
+  -email : String
+  -phone : String
+  -birthdate : LocalDate
 }
 
 class Employee {
-  - employeeId : int
-  - licenses : Set<LicenseCode>
-  + addLicense(code : LicenseCode) : void
-  + removeLicense(code : LicenseCode) : void
-}
-
-class License {
-  - code : LicenseCode
-  - description : String
-}
-
-abstract class Vehicle {
-  - vehicleId : int
-  - vehicleType : VehicleType
-  - licensePlate : String
-  - brand : String
-  - productionYear : int
-  - energyType : EnergyType
-  - energyUnit : EnergyUnit
-  - energyConsumption : BigDecimal
-  - mileage : int
-  - energyLevel : BigDecimal
-  + drive(km : int) : void
-  + refuelOrCharge(amount : BigDecimal) : void
-}
-
-class Car {
-  - numberOfSeats : int
-}
-
-class Truck {
-  - maxLoadKg : BigDecimal
-}
-
-class Motorcycle {
-  - engineCapacityCcm : int
-}
-
-class VehicleDriverAssignment {
-  - assignedFrom : LocalDate
-  - assignedTo : LocalDate
-  + isCurrent() : boolean
+  -employeeId : int
+  -licenses : Set<LicenseCode>
+  +addLicense(code : LicenseCode) : void
+  +removeLicense(code : LicenseCode) : void
 }
 
 Person <|-- Employee
 
-Vehicle <|-- Car
-Vehicle <|-- Truck
-Vehicle <|-- Motorcycle
+' ===== LICENSE =====
+class License {
+  -code : LicenseCode
+  -description : String
+}
 
-Employee "1" o-- "0..*" License : has >
-License "1" o-- "0..*" Employee : assigned to >
+Employee "0..*" o-- "0..*" License : has
 
-Vehicle "1" o-- "0..*" VehicleDriverAssignment : assignments >
-Employee "1" o-- "0..*" VehicleDriverAssignment : assignments >
-VehicleDriverAssignment "1" --> "1" Vehicle : vehicle
-VehicleDriverAssignment "1" --> "1" Employee : driver
+' ===== VEHICLE =====
+abstract class Vehicle {
+  -vehicleId : int
+  -vehicleType : VehicleType
+  -licensePlate : String
+  -brand : String
+  -productionYear : int
+  -energyType : EnergyType
+  -energyUnit : EnergyUnit
+  -energyConsumption : double
+  -mileage : int
+  -energyLevel : double
+  +drive(km : int) : void
+  +refuelOrCharge(amount : double) : void
+}
 
-@enduml
+class Car {
+  -numberOfSeats : int
+}
+
+class Truck {
+  -maxLoadKg : double
+}
+
+class Motorcy

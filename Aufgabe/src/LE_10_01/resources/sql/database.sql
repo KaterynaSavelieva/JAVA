@@ -90,7 +90,6 @@ INSERT INTO license (license_code, description) VALUES
 ('BE', 'Car with trailer'),
 ('CE', 'Truck with trailer');
 
--- PERSONS (5 людей)
 INSERT INTO person (name, email, phone, birthdate) VALUES
 ('Anna Berger',  'anna.berger@example.com',  '+43 660 111 222', '1991-04-12'),
 ('Markus Huber', 'markus.huber@example.com', '+43 699 333 444', '1987-09-03'),
@@ -98,10 +97,8 @@ INSERT INTO person (name, email, phone, birthdate) VALUES
 ('David Novak',  'david.novak@example.com',  '+43 664 777 888', '1982-11-19'),
 ('Sara Meier',   'sara.meier@example.com',   '+43 650 999 000', '1998-07-08');
 
--- EMPLOYEES (1:1 до person, вставляємо person_id 1..5)
 INSERT INTO employee (person_id) VALUES (1),(2),(3),(4),(5);
 
--- EMPLOYEE_LICENSE (employee_id тепер теж 1..5)
 INSERT INTO employee_license (employee_id, license_code) VALUES
 (1, 'B'),
 (2, 'B'), (2, 'C'), (2, 'CE'),
@@ -109,7 +106,6 @@ INSERT INTO employee_license (employee_id, license_code) VALUES
 (4, 'A'), (4, 'B'),
 (5, 'B'), (5, 'BE');
 
--- VEHICLE (energy_unit тепер явний)
 INSERT INTO vehicle (vehicle_type, license_plate, brand, production_year, energy_type, energy_unit,
                      energy_consumption, mileage, energy_level) VALUES
 ('CAR',        'MT-AB123', 'Toyota', 2019, 'PETROL',   'LITER',  6.80,  84500, 22.50),

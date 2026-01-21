@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class Employee extends Person {
 
-    private final int employeeId; // DB: employee.employee_id
+    private final int employeeId;
     private final EnumSet<LicenseCode> licenses = EnumSet.noneOf(LicenseCode.class);
 
     public Employee(int personId, int employeeId, String name, String email, String phone, LocalDate birthdate) {
@@ -18,9 +18,7 @@ public class Employee extends Person {
         this.employeeId = employeeId;
     }
 
-    public int getEmployeeId() {
-        return employeeId;
-    }
+    public int getEmployeeId() { return employeeId; }
 
     public void addLicense(LicenseCode code) {
         licenses.add(Objects.requireNonNull(code, "license code must not be null"));

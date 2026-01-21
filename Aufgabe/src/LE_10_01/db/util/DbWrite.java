@@ -1,4 +1,6 @@
-package LE_10_01.db;
+package LE_10_01.db.util;
+
+import LE_10_01.db.DBConnection;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -15,8 +17,7 @@ public class DbWrite {
         T run(Connection conn) throws Exception;
     }
 
-    // ---------- Transaction wrapper ----------
-    public static <T> T inTransaction(TxWork<T> work) throws Exception {
+    public static <T> T inTransaction(TxWork<T> work) {
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -27,10 +28,11 @@ public class DbWrite {
                 conn.rollback();
                 throw e;
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    // ---------- Execute update in an EXISTING connection (for transactions) ----------
     public static int executeUpdate(Connection conn, String sql, ParamsSetter setter) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             if (setter != null) setter.set(ps);
@@ -50,7 +52,6 @@ public class DbWrite {
         }
     }
 
-    // ---------- Null helpers ----------
     public static void setNullableString(PreparedStatement ps, int idx, String value) throws SQLException {
         if (value == null) ps.setNull(idx, Types.VARCHAR);
         else ps.setString(idx, value);
