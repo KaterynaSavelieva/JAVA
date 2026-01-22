@@ -8,7 +8,7 @@ CREATE TABLE person (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     phone VARCHAR(30),
-    birthdate DATE
+    birthdate DATE NOT NULL
 );
 
 -- ===== EMPLOYEE =====

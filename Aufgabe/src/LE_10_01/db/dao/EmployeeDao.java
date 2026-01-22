@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.sql.Date;
 
 /* DAO for employee-related database operations.
  * - SELECT employees (read)
@@ -75,7 +76,8 @@ public class EmployeeDao {
 
             // phone and birthdate can be NULL
             DbWrite.setNullableString(ps, 3, phone);
-            DbWrite.setNullableDate(ps, 4, birthdate);
+            ps.setDate(4, Date.valueOf(birthdate));
+
         });
     }
 

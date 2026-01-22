@@ -14,6 +14,8 @@ public class MenuPrinter {
         System.out.println("5) New employee (insert)");
         System.out.println("6) New vehicle (insert)");
         System.out.println("7) Assign driver to vehicle");
+        System.out.println("8) Unassign driver from vehicle");
+        System.out.println("9) Show history driver per vehicle");
         System.out.println("0) Exit");
     }
 }

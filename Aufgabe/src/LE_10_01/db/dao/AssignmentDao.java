@@ -43,24 +43,87 @@ public class AssignmentDao {
         );
     }
 
-    /*Assigns an employee as the current driver of a vehicle.
-     The operation is done in one transaction.     */
-    public int assignDriver(int vehicleId, int employeeId, LocalDate fromDate) {
 
-        // Run both steps in one transaction
+    /*Prints the current driver for each vehicle.
+      Uses a database VIEW for easier SELECT.  */
+    public void printHistoryDriverPerVehicle() {
+
+        // SQL query using the database view
+        String sql = """
+                SELECT vehicle_id, license_plate,
+                       employee_id, name,
+                       assigned_from, assigned_to
+                FROM driver_history_view
+                ORDER BY vehicle_id
+                """;
+
+        // Table header for console output
+        String header = String.format("| %-3s | %-10s | %-3s | %-20s | %-10s | %-10s |",
+                "VID", "PLATE", "EID", "DRIVER", "FROM", "TO");
+
+        // Execute SELECT and print result
+        DbRunner.print("CURRENT DRIVER", header, sql, rs ->
+                String.format("| %3d | %-10s | %-3s | %-20s | %-10s | %-10s |",
+                        rs.getInt("vehicle_id"),
+                        rs.getString("license_plate"),
+                        // If there is no driver, show "-"
+                        (rs.getObject("employee_id") == null ? "-" : rs.getInt("employee_id")),
+                        (rs.getString("name") == null ? "-" : rs.getString("name")),
+                        (rs.getDate("assigned_from") == null
+                                ? "-"
+                                : rs.getDate("assigned_from").toString())
+                        ,
+                        (rs.getDate("assigned_to") == null
+                                ? ""
+                                : rs.getDate("assigned_to").toString())
+                )
+        );
+    }
+
+    // Check if this vehicle already has a current driver
+    public boolean hasCurrentDriver (int vehicleId) {
+        String sql = """
+                SELECT 1
+                FROM vehicle_driver
+                WHERE vehicle_id = ?
+                AND assigned_to IS NULL
+                LIMIT 1;
+        """;
         return DbWrite.inTransaction(conn -> {
+            try (var ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, vehicleId);
+                try (var rs = ps.executeQuery()) {
+                    return rs.next();
+                }
+            }
+        });
+    }
 
-            // Close previous assignment (if exists)
+    // Unassign current driver (close current assignment). Returns affected rows (0 or 1)
+    public int unassignCurrentDriver (int vehicleId, LocalDate endDate) {
+        return DbWrite.<Integer>inTransaction(conn ->
+                closeCurrentAssignment(conn, vehicleId, endDate)
+        );
+    }
+
+    // Normal assign: will FAIL/RETURN 0 if vehicle is not free (we check in Management)
+    public int assignDriver(int vehicleId, int employeeId, LocalDate fromDate) {
+        return DbWrite.inTransaction(conn ->
+                insertNewAssignment(conn, vehicleId, employeeId, fromDate));
+    }
+
+    public int replaceDriver(int vehicleId, int employeeId, LocalDate fromDate) {
+        return DbWrite.inTransaction(conn -> {
             closeCurrentAssignment(conn, vehicleId, fromDate);
-
-            // Insert new assignment
             return insertNewAssignment(conn, vehicleId, employeeId, fromDate);
         });
     }
 
+
+
     /* Closes the current assignment for a vehicle.
       Sets assigned_to to the given end date.     */
-    private void closeCurrentAssignment(Connection conn,
+    private int closeCurrentAssignment(Connection conn,
                                         int vehicleId,
                                         LocalDate endDate) throws SQLException {
 
@@ -72,7 +135,7 @@ public class AssignmentDao {
                 """;
 
         // Execute UPDATE statement
-        DbWrite.executeUpdate(conn, sql, ps -> {
+        return DbWrite.executeUpdate(conn, sql, ps -> {
             ps.setDate(1, java.sql.Date.valueOf(endDate));
             ps.setInt(2, vehicleId);
         });

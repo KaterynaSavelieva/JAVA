@@ -14,7 +14,7 @@ public class ConsoleUi {
             MenuPrinter.printHeader();
             MenuPrinter.printMenu();
 
-            int choice = InputHelper.readInt(scanner, "Choose option (0-7): ", 0, 7);
+            int choice = InputHelper.readInt(scanner, "Choose option (0-9): ", 0, 9);
 
             switch (choice) {
                 case 1 -> management.showAllVehicles();
@@ -24,6 +24,9 @@ public class ConsoleUi {
                 case 5 -> management.insertNewEmployee(scanner);
                 case 6 -> management.insertNewVehicle(scanner);
                 case 7 -> management.assignDriverToVehicle(scanner);
+                case 8 -> management.unassignDriverFromVehicle(scanner);
+                case 9 -> management.showHistoryDriverPerVehicle();
+
                 case 0 -> {
                     System.out.println("Bye!");
                     scanner.close();

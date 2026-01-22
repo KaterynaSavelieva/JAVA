@@ -6,12 +6,20 @@ import LE_10_01.db.dao.EmployeeDao;
 import LE_10_01.db.dao.VehicleDao;
 
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 /* FleetManagement = "business logic" layer.
   It connects the UI (console input) with the DAO layer (database).
   UI -> FleetManagement -> DAO -> DB */
 public class FleetManagement {
+
+    int MIN_YEAR_PROD =1950;
+    int MAX_YEAR_PROD=Year.now().getValue();
+
+    int MIN_YEAR_EMPL =18;
+    int MAX_YEAR_EMPL=100;
 
     // DAO objects: each DAO is responsible for one database area
     private final VehicleDao vehicleDao = new VehicleDao();
@@ -33,6 +41,11 @@ public class FleetManagement {
         assignmentDao.printCurrentDriverPerVehicle();
     }
 
+    /* Show the history driver for each vehicle*/
+    public void showHistoryDriverPerVehicle() {
+        assignmentDao.printHistoryDriverPerVehicle();
+    }
+
     /* Show all employees */
     public void showAllEmployees() {
         employeeDao.printAllEmployees();
@@ -44,17 +57,47 @@ public class FleetManagement {
     public void insertNewEmployee(Scanner scanner) {
         System.out.println("\n=== INSERT NEW EMPLOYEE ===");
 
-        // Read and validate input
-        String name = InputHelper.readNotBlank(scanner, "Name: ");
-        String email = InputHelper.readNotBlank(scanner, "Email: ");
+        // 1) Read base fields
+        String name  = InputHelper.readNotBlank(scanner, "Name: ");
+        String email = InputHelper.readEmail(scanner, "Email: ");
         String phone = InputHelper.readOptional(scanner, "Phone (optional): ");
-        LocalDate birthdate = InputHelper.readOptionalDate(scanner, "Birthdate (yyyy-MM-dd, Enter to skip): ");
 
-        // Insert into DB and get generated employee_id
+        // 2) Read REQUIRED birthdate (0 = back)
+        LocalDate birthdate;
+
+        while (true) {
+            birthdate = InputHelper.readDate(scanner, "Birthdate (yyyy-MM-dd, 0 = back): ");
+
+            // user chose 0 -> back to menu
+            if (birthdate == null) {
+                System.out.println("Back to menu...");
+                return;
+            }
+
+            // date must NOT be in the future
+            if (birthdate.isAfter(LocalDate.now())) {
+                System.out.println("Birthdate cannot be in the future.");
+                continue;
+            }
+
+            // age check (18..100)
+            int age = java.time.Period.between(birthdate, LocalDate.now()).getYears();
+            if (age < MIN_YEAR_EMPL || age > MAX_YEAR_EMPL) {
+                System.out.println("Employee age must be between " + MIN_YEAR_EMPL + " and " + MAX_YEAR_EMPL);
+                continue;
+            }
+
+            // valid birthdate
+            break;
+        }
+
+        // 3) Insert into DB
         int employeeId = employeeDao.insertEmployee(name, email, phone, birthdate);
 
         System.out.println("Insert successful employee_id = " + employeeId);
     }
+
+
 
     /* Read user input and insert a new vehicle.
       - First insert into "vehicle" table (base)
@@ -70,7 +113,7 @@ public class FleetManagement {
         // 2) Common vehicle fields
         String plate = InputHelper.readNotBlank(scanner, "License plate: ");
         String brand = InputHelper.readNotBlank(scanner, "Brand: ");
-        int year = InputHelper.readPositiveInt(scanner, "Production year (e.g. 2019): ");
+        int year = InputHelper.readIntRange(scanner, "Production year ("+MIN_YEAR_PROD + "-"+MAX_YEAR_PROD, MIN_YEAR_PROD, MAX_YEAR_PROD);
 
         // 3) Energy type + auto energy unit
         String energyType = InputHelper.readEnum(scanner,
@@ -117,22 +160,53 @@ public class FleetManagement {
 
         // Read IDs from user
         int vehicleId = InputHelper.readPositiveInt(scanner, "Vehicle ID: ");
-        int employeeId = InputHelper.readPositiveInt(scanner, "Employee ID: ");
-
         // --- safety checks ---
         if (!vehicleDao.existsById(vehicleId)) {
             System.out.println("Vehicle ID: " + vehicleId + " does not exist");
             return;
         }
-
+        int employeeId = InputHelper.readPositiveInt(scanner, "Employee ID: ");
         if (!employeeDao.existsById(employeeId)) {
             System.out.println("Employee ID: " + employeeId + " does not exist");
             return;
         }
 
+        boolean busy = assignmentDao.hasCurrentDriver(vehicleId);
+
+        if (busy) {
+            System.out.println("This vehicle already has a current driver.");
+            System.out.println("1) Back to menu");
+            System.out.println("2) Replace  driver");
+
+            int choice = InputHelper.readEnum(scanner, "Choose (1/2): ",
+                    new String[]{"1","2"}).equals("1") ? 1 : 2;
+
+            if (choice==1) {
+                System.out.println("Back to menu.");
+                return;
+            }
+
+            int inserted = assignmentDao.replaceDriver(vehicleId,employeeId,LocalDate.now());
+            System.out.println("Driver replaced (inserted rows: " + inserted + ")");
+            return;
+        }
+
+
         // Do transaction: close old + insert new
         int insertedRows = assignmentDao.assignDriver(vehicleId, employeeId, LocalDate.now());
         System.out.println("Assignment done (inserted rows: " + insertedRows + ")");
+    }
+
+    public void unassignDriverFromVehicle(Scanner scanner) {
+        System.out.println("UNASSIGN DRIVER FROM VEHICLE");
+
+        int vehicleId = InputHelper.readPositiveInt(scanner, "Vehicle ID: ");
+        int updates = assignmentDao.unassignCurrentDriver(vehicleId, LocalDate.now());
+        if (updates == 0) {
+            System.out.println("No current driver to unassign");
+        } else {
+            System.out.println("Assignment done (inserted rows: " + updates + ")");
+        }
     }
 
 }

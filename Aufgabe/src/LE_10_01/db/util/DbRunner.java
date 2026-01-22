@@ -22,9 +22,15 @@ public class DbRunner {
                              String header,
                              String sql,
                              RowMapper mapper) {
-        System.out.println("\n================ " + title + " ================");
+        int  WIDTH =header.length();
+        int  WIDTHT =title.length();
+
+        int sideLeft = (WIDTH - WIDTHT) / 2;
+        int sideRight = WIDTH - sideLeft - WIDTHT;
+        System.out.println("\n" + "=".repeat(sideLeft) + title + "=".repeat(sideRight));
         System.out.println(header);
-        System.out.println("-".repeat(header.length()));
+
+        System.out.println("-".repeat(WIDTH));
 
         // Try-with-resources closes connection, statement and result set automatically
         try (Connection conn = DBConnection.getConnection();
