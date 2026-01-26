@@ -24,24 +24,26 @@ public class EmployeeDao {
                        name,
                        email,
                        phone,
-                       birthdate
+                       birthdate,
+                       licenses
                 FROM all_employees_view
                 ORDER BY employee_id
                 """;
 
         // Table header for nice console output
-        String header = String.format("| %-3s | %-20s | %-28s | %-17s | %-10s |",
-                "ID", "NAME", "EMAIL", "PHONE", "BIRTHDATE");
+        String header = String.format("| %-3s | %-20s | %-28s | %-17s | %-10s | %-10s |",
+                "ID", "NAME", "EMAIL", "PHONE", "BIRTHDATE", "LICENSES");
 
         // Run SELECT and print each row using a RowMapper (lambda)
         DbRunner.print("EMPLOYEES", header, sql, rs ->
-                String.format("| %3d | %-20s | %-28s | %-17s | %-10s |",
+                String.format("| %3d | %-20s | %-28s | %-17s | %-10s | %-10s |",
                         rs.getInt("employee_id"),
                         rs.getString("name"),
                         rs.getString("email"),
                         rs.getString("phone"),
                         // Show "-" if birthdate is NULL
-                        (rs.getDate("birthdate") == null ? "-" : rs.getDate("birthdate").toString())
+                        (rs.getDate("birthdate") == null ? "-" : rs.getDate("birthdate").toString()),
+                        (rs.getString("licenses") == null ? "-" : rs.getString("licenses"))
                 )
         );
     }
@@ -104,5 +106,24 @@ public class EmployeeDao {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean hasLicense (int employeeId, String licenseCode) {
+        String sql = """
+                SELECT 1
+                FROM employee_license
+                WHERE employee_id = ?
+                AND license_code = ?
+                LIMIT 1;
+                """;
+        return DbWrite.inTransaction(conn -> {
+            try (var ps = conn.prepareStatement(sql)) {
+                ps.setInt(1,employeeId);
+                ps.setString(2,licenseCode);
+                try (var rs = ps.executeQuery()) {
+                    return rs.next();
+                }
+            }
+        });
     }
 }

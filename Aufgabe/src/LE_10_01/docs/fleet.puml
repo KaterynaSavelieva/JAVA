@@ -1,7 +1,6 @@
 @startuml
 skinparam classAttributeIconSize 0
 
-' ===== ENUMS =====
 enum VehicleType {
   CAR
   TRUCK
@@ -28,54 +27,150 @@ enum LicenseCode {
   CE
 }
 
-' ===== PERSON / EMPLOYEE =====
-class Person {
-  -personId : int
-  -name : String
-  -email : String
-  -phone : String
-  -birthdate : LocalDate
+
+package LE_10_01_app {
+
+  class App {
+    +main(args : String[]) : void
+  }
+
+  class ConsoleUi {
+    -scanner : Scanner
+    -management : FleetManagement
+    +run() : void
+  }
+
+  class MenuPrinter {
+    +printHeader() : void
+    +printMenu() : void
+  }
+
+  class InputHelper {
+    +readInt(scanner, msg, min, max) : int
+    +readPositiveInt(scanner, msg) : int
+    +readNotBlank(scanner, msg) : String
+    +readEmail(scanner, msg) : String
+    +readOptional(scanner, msg) : String
+    +readEnum(scanner, msg, allowed) : String
+    +readIntRange(scanner, msg, min, max) : int
+    +readNonNegativeInt(scanner, msg) : int
+    +readNonNegativeDouble(scanner, msg) : double
+    +readDate(scanner, msg) : LocalDate
+    +pressEnter(scanner) : void
+  }
+
+  App --> ConsoleUi : starts
+  ConsoleUi --> MenuPrinter
+  ConsoleUi --> InputHelper
+  ConsoleUi --> FleetManagement
 }
 
-class Employee {
-  -employeeId : int
-  -licenses : Set<LicenseCode>
-  +addLicense(code : LicenseCode) : void
-  +removeLicense(code : LicenseCode) : void
+
+package LE_10_01_management {
+
+  class FleetManagement {
+    +showAllVehicles()
+    +showVehiclesWithDetails()
+    +showCurrentDriverPerVehicle()
+    +showHistoryDriverPerVehicle()
+    +showAllEmployees()
+    +insertNewEmployee(scanner)
+    +insertNewVehicle(scanner)
+    +assignDriverToVehicle(scanner)
+    +unassignDriverFromVehicle(scanner)
+  }
 }
 
-Person <|-- Employee
 
-' ===== LICENSE =====
-class License {
-  -code : LicenseCode
-  -description : String
+package LE_10_01_db_dao {
+
+  class VehicleDao
+  class EmployeeDao
+  class AssignmentDao
 }
 
-Employee "0..*" o-- "0..*" License : has
+FleetManagement --> VehicleDao
+FleetManagement --> EmployeeDao
+FleetManagement --> AssignmentDao
 
-' ===== VEHICLE =====
-abstract class Vehicle {
-  -vehicleId : int
-  -vehicleType : VehicleType
-  -licensePlate : String
-  -brand : String
-  -productionYear : int
-  -energyType : EnergyType
-  -energyUnit : EnergyUnit
-  -energyConsumption : double
-  -mileage : int
-  -energyLevel : double
-  +drive(km : int) : void
-  +refuelOrCharge(amount : double) : void
+
+package LE_10_01_model_person {
+
+  class Person {
+    -personId : int
+    -name : String
+    -email : String
+    -phone : String
+    -birthdate : LocalDate
+  }
+
+  class Employee {
+    -employeeId : int
+    -licenses : Set<LicenseCode>
+    +addLicense(code : LicenseCode)
+    +removeLicense(code : LicenseCode)
+  }
+
+  Person <|-- Employee
 }
 
-class Car {
-  -numberOfSeats : int
+
+package LE_10_01_model_license {
+
+  class License {
+    -code : LicenseCode
+    -description : String
+  }
 }
 
-class Truck {
-  -maxLoadKg : double
+Employee "0..*" -- "0..*" License : has
+
+package LE_10_01_model_vehicle {
+
+  abstract class Vehicle {
+    -vehicleId : int
+    -vehicleType : VehicleType
+    -licensePlate : String
+    -brand : String
+    -productionYear : int
+    -energyType : EnergyType
+    -energyUnit : EnergyUnit
+    -energyConsumption : double
+    -mileage : int
+    -energyLevel : double
+    +drive(km : int)
+    +refuelOrCharge(amount : double)
+  }
+
+  class Car {
+    -numberOfSeats : int
+  }
+
+  class Truck {
+    -maxLoadKg : double
+  }
+
+  class Motorcycle {
+    -engineCapacityCcm : int
+  }
+
+  Vehicle <|-- Car
+  Vehicle <|-- Truck
+  Vehicle <|-- Motorcycle
 }
 
-class Motorcy
+
+package LE_10_01_model_assignment {
+
+  class VehicleDriverAssignment {
+    -assignedFrom : LocalDate
+    -assignedTo : LocalDate
+    +isCurrent() : boolean
+    +close(endDate : LocalDate)
+  }
+}
+
+VehicleDriverAssignment --> Vehicle
+VehicleDriverAssignment --> Employee
+
+@enduml

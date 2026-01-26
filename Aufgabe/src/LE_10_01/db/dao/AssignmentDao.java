@@ -17,25 +17,28 @@ public class AssignmentDao {
 
         // SQL query using the database view
         String sql = """
-                SELECT vehicle_id, license_plate,
+                SELECT vehicle_id, license_plate, vehicle_type,
                        employee_id, name,
+                       licenses,
                        assigned_from
                 FROM current_driver_view
                 ORDER BY vehicle_id
                 """;
 
         // Table header for console output
-        String header = String.format("| %-3s | %-10s | %-3s | %-20s | %-10s |",
-                "VID", "PLATE", "EID", "DRIVER", "FROM");
+        String header = String.format("| %-3s | %-10s | %-10s | %-3s | %-20s | %-10s | %-10s |",
+                "VID", "PLATE", "TYPE", "EID", "DRIVER", "LICENSES", "FROM");
 
         // Execute SELECT and print result
         DbRunner.print("CURRENT DRIVER", header, sql, rs ->
-                String.format("| %3d | %-10s | %-3s | %-20s | %-10s |",
+                String.format("| %3d | %-10s | %-10s | %-3s | %-20s | %-10s | %-10s |",
                         rs.getInt("vehicle_id"),
                         rs.getString("license_plate"),
+                        rs.getString("vehicle_type"),
                         // If there is no driver, show "-"
                         (rs.getObject("employee_id") == null ? "-" : rs.getInt("employee_id")),
                         (rs.getString("name") == null ? "-" : rs.getString("name")),
+                        rs.getString("licenses"),
                         (rs.getDate("assigned_from") == null
                                 ? "-"
                                 : rs.getDate("assigned_from").toString())
@@ -50,25 +53,28 @@ public class AssignmentDao {
 
         // SQL query using the database view
         String sql = """
-                SELECT vehicle_id, license_plate,
+                SELECT vehicle_id, license_plate, vehicle_type,
                        employee_id, name,
+                       licenses,
                        assigned_from, assigned_to
                 FROM driver_history_view
                 ORDER BY vehicle_id
                 """;
 
         // Table header for console output
-        String header = String.format("| %-3s | %-10s | %-3s | %-20s | %-10s | %-10s |",
-                "VID", "PLATE", "EID", "DRIVER", "FROM", "TO");
+        String header = String.format("| %-3s | %-10s | %-10s | %-3s | %-20s | %-10s | %-10s | %-10s |",
+                "VID", "PLATE", "TYPE", "EID", "DRIVER", "LICENSES", "FROM", "TO");
 
         // Execute SELECT and print result
         DbRunner.print("CURRENT DRIVER", header, sql, rs ->
-                String.format("| %3d | %-10s | %-3s | %-20s | %-10s | %-10s |",
+                String.format("| %3d | %-10s | %-10s | %-3s | %-20s | %-10s | %-10s | %-10s |",
                         rs.getInt("vehicle_id"),
                         rs.getString("license_plate"),
+                        rs.getString("vehicle_type"),
                         // If there is no driver, show "-"
                         (rs.getObject("employee_id") == null ? "-" : rs.getInt("employee_id")),
                         (rs.getString("name") == null ? "-" : rs.getString("name")),
+                        rs.getString("licenses"),
                         (rs.getDate("assigned_from") == null
                                 ? "-"
                                 : rs.getDate("assigned_from").toString())
@@ -158,6 +164,30 @@ public class AssignmentDao {
             ps.setInt(1, vehicleId);
             ps.setInt(2, employeeId);
             ps.setDate(3, java.sql.Date.valueOf(fromDate));
+        });
+    }
+
+    public boolean canDriveVehicle(int vehicleId, int employeeId) {
+        String sql = """
+                SELECT 1
+                FROM vehicle v
+                JOIN employee_license el ON el.employee_id = ?
+                WHERE v.vehicle_id = ?
+                AND (
+                    (v.vehicle_type = 'CAR' AND el.license_code = 'B') OR
+                    (v.vehicle_type = 'TRUCK' AND el.license_code IN ('C', 'CE')) OR
+                    (v.vehicle_type = 'MOTORCYCLE' AND el.license_code = 'A')
+                )
+                LIMIT 1
+        """;
+        return DbWrite.inTransaction(conn ->  {
+            try (var ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, employeeId);
+                ps.setInt(2, vehicleId);
+                try (var rs = ps.executeQuery()) {
+                    return rs.next();
+                }
+            }
         });
     }
 }

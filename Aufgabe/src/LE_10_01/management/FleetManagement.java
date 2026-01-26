@@ -160,7 +160,8 @@ public class FleetManagement {
 
         // Read IDs from user
         int vehicleId = InputHelper.readPositiveInt(scanner, "Vehicle ID: ");
-        // --- safety checks ---
+
+        // safety checks
         if (!vehicleDao.existsById(vehicleId)) {
             System.out.println("Vehicle ID: " + vehicleId + " does not exist");
             return;
@@ -168,6 +169,19 @@ public class FleetManagement {
         int employeeId = InputHelper.readPositiveInt(scanner, "Employee ID: ");
         if (!employeeDao.existsById(employeeId)) {
             System.out.println("Employee ID: " + employeeId + " does not exist");
+            return;
+        }
+
+        // license check
+        String vehicleType = vehicleDao.getVehicleTypeById(vehicleId);// CAR/TRUCK/MOTORCYCLE
+        if (vehicleType == null) {
+            System.out.println("Vehicle type not found");
+            return;
+        }
+
+        // License check (business rule)
+        if (!assignmentDao.canDriveVehicle(vehicleId, employeeId)) {
+            System.out.println("Cannot assign. Employee " + employeeId + " has NO required license for this vehicle.");
             return;
         }
 

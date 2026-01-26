@@ -220,6 +220,19 @@ public class VehicleDao {
         }
     }
 
+    public String getVehicleTypeById(int vehicleId) {
+        String sql = "SELECT vehicle_type FROM vehicle WHERE vehicle_id = ?";
+        return DbWrite.inTransaction(conn -> {
+            try (var ps = conn.prepareStatement(sql)) {
+                ps.setInt(1,vehicleId);
+                try (var rs = ps.executeQuery()) {
+                    if (!rs.next()) return null;
+                    return rs.getString("vehicle_type");
+                }
+            }
+        });
+    }
+
 
 
 }
