@@ -1,21 +1,22 @@
-package LE_09_02.model;
+package LE_11_01.model;
 
-public class Coach extends Person{
-    private String licenseLevel;
+import java.time.LocalDate;
 
-    public Coach(int id,
-                 String firstName,
-                 String lastName,
-                 String email,
-                 String phone,
-                 String licenseLevel) {
-        super(id, firstName, lastName, email, phone);
+public class Coach extends Person {
+    private final LicenseLevel licenseLevel;
+
+
+    public Coach (int personId, String name, String email, String phone,
+                  LocalDate birthdate,  LicenseLevel licenseLevel) {
+        super(personId, name, email, phone, birthdate, Role.COACH);
         this.licenseLevel = licenseLevel;
+
     }
+    public LicenseLevel getLicenseLevel() {return licenseLevel; }
 
-    public String getLicenseLevel() {return licenseLevel;}
 
-    //Member і Coach успадковують всі public (і protected) методи Person
+
+
 
 
 }

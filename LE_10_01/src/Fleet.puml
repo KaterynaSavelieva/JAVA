@@ -1,0 +1,42 @@
+@startuml
+title Fleet Management
+
+' ======= Base class =======
+abstract class Vehicle {
+  - id: int
+  - licensePlate: String
+  - brand: String
+  - mileage: int
+  - fuelLiters: double
+  + drive(km: int): void
+  + refuel(liters: double): void
+}
+
+' ======= Specializations =======
+class Car {
+  - numberOfSeats: int
+}
+
+class Truck {
+  - maxLoadKg: double
+}
+
+class Motorcycle {
+  - engineCapacityCcm: int
+}
+
+Vehicle <|-- Car
+Vehicle <|-- Truck
+Vehicle <|-- Motorcycle
+
+' ======= Employee =======
+class Employee {
+  - id: int
+  - name: String
+  - drivingLicenseType: String
+}
+
+' A vehicle can have one current driver
+Vehicle "0..1" --> "0..*" Employee : currentDriver
+
+@enduml

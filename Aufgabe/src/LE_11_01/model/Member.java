@@ -1,38 +1,28 @@
-package LE_09_02.model;
+package LE_11_01.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
-public class Member extends Person { //extends → наслідування
-    private String memberNumber;
-    private LocalDate joinDate;
+public class Member extends Person {
+    private final LocalDate joinDate;
 
-    public Member(int id,
-                  String firstName,
-                  String lastName,
-                  String email,
-                  String phone,
-                  String memberNumber,
-                  LocalDate joinDate) {
-        super(id, firstName, lastName, email, phone); //Створи частину Person всередині Member
-        // super(...) → виклик конструктора батьківського класу
-        // Java робить так:
-        // спочатку створює Person
-        // потім додає Member-частину
-        // Без super(...) — код НЕ скомпілюється.
-        // Member НЕ повторює поля Person
-        //Member має доступ до PUBLIC методів Person -УСПАДКОВУЄ
-
-        this.memberNumber = memberNumber;
-        this.joinDate = joinDate;
+    public Member (int personId, String name, String email, String phone,
+                   LocalDate birthdate, LocalDate joinDate) {
+        super(personId, name, email, phone, birthdate, Role.MEMBER);
+        this.joinDate = Objects.requireNonNull(joinDate, "joinDate must not be null");
+        if (joinDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Join date cannot be in the future");
+        }
     }
 
-    public String getMemberNumber() {
-        return memberNumber;
+    public LocalDate getJoinDate() {return joinDate;}
+
+    @Override
+    public String toString() {
+        return "[MEMBER] " + super.toString() + ", joinDate=" + joinDate;
     }
 
-    public LocalDate getJoinDate() {
-        return joinDate;
-    }
+
 }
 
 

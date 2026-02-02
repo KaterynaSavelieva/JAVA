@@ -17,5 +17,6 @@ public class MenuPrinter {
         System.out.println("8) Unassign driver from vehicle");
         System.out.println("9) Show history driver per vehicle");
         System.out.println("0) Exit");
+        System.out.println();
     }
 }
